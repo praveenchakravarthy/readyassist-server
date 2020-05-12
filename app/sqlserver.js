@@ -14,21 +14,6 @@ var connecting = {
 
 var connect = mysql.createConnection(connecting)
 
-app.get('/candidates',(req,res) =>{
-    let sql ='select * from candidates'
-    connect.query(sql,function(error,data){
-        if(error){
-            error()
-            res.send('no access')
-        }
-          let response ={
-              data : data
-          }
-            res.send(response)
-    })
-             
-});
-
 
 app.get('/candidates/:id' , (req,res) =>{
     let sql ='select * from candidates where id =?'
@@ -82,25 +67,34 @@ app.get('/trainees/:name' , (req,res) =>{
   })
 });
 
-app.get('/candidates/:college',(req,res)=>{
-   let sql='select * from candidates where college=?'
-   if (req.query.college){
-       sql = sql + req.query.college;
-   }
-   connect.query(sql,function(error,data,fields){
-   if(error){
-       error()
-   };
-   res.send('you cannot access')
-   
-         let response = {
-             data: data
-         }
-         res.send(response);
-})
 
+app.get('/candidates',(req,res) =>{
+
+    let sql ='select * from candidates'
+    if(req.query.college) {
+        sql = `select * from candidates where college = ? `;
+        connect.query(sql, [req.query.college], (error, data) => {
+            if(error) {
+                res.send({error: error});
+            }
+            res.send({data: data});
+        })  
+    }            
 });
 
+app.get('/trainees',(req,res) =>{
+
+    let sql ='select * from trainees'
+    if(req.query.place) {
+        sql = `select * from trainees where place = ? `;
+        connect.query(sql, [req.query.place], (error, data) => {
+            if(error) {
+                res.send({error: error});
+            }
+            res.send({data: data});
+        })  
+    }            
+});
 
 app.listen(port,  () => 
 {console.log("Hello Pc! welcome to the server...")
