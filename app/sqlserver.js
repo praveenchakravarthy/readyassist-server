@@ -76,6 +76,7 @@ app.get('/candidates',(req,res) =>{
         connect.query(sql, [req.query.college], (error, data) => {
             if(error) {
                 res.send({error: error});
+                res.send(`sorry you cannot access this file ${error}`);
             }
             res.send({data: data});
         })  
@@ -90,6 +91,7 @@ app.get('/trainees',(req,res) =>{
         connect.query(sql, [req.query.place], (error, data) => {
             if(error) {
                 res.send({error: error});
+                res.send(`sorry you cannot access this file ${error}`);
             }
             res.send({data: data});
         })  
